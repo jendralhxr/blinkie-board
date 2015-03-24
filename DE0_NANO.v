@@ -172,33 +172,16 @@ input 		     [1:0]		GPIO_1_IN;
 wire           				reset_n;
 wire 							set_n;
 
-reg [31:0] 	counter;
-reg [7:0]   LED;
+reg [31:0] counter;
+reg [31:0] counter_overflow;
+reg [7:0]  LED;
 reg [7:0] temp;
 reg [5:0] seq;
 reg [159:0] data; // 20 1-byte chars
 reg phase; // 0=off 1='emit' data
-//=======================================================
-//  Structural coding
-//=======================================================
 
-assign   reset_n = KEY[0];
-assign   set_n = KEY[1];
-
-always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
-	begin
-		if(!reset_n)
-			begin
-				counter <= 0;
-				LED[0] = 0;
-				LED[1] = ~0;
-				LED[2] = 0;
-				LED[3] = ~0;
-				LED[4] = 0;
-				LED[5] = ~0;
-				LED[6] = 0;
-				LED[7] = ~0;
-				// reinit data with 'Robotics Lab rocks!/r'
+initial begin
+// init data with 'Robotics Lab rocks!/r'
 				data[7:0] = 8'h52; // R
 				data[15:8] = 8'h6f; // o
 				data[23:16] = 8'h62; // b
@@ -211,7 +194,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				data[79:72] = 8'h4c; // L
 				data[87:80] = 8'h61; // a
 				data[95:88] = 8'h62; // b
-				data[103:96] = 8'h20; // space
+				data[103:96]= 8'h20; // space
 				data[111:104] = 8'h72; // r
 				data[119:112] = 8'h6f; // o
 				data[127:120] = 8'h63; // c
@@ -219,9 +202,37 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h21; // !
 				data[159:152] = 8'h0d; // CR
+
+// init counter_overflow with 5000
+counter_overflow = 5000;
+end
+				
+//=======================================================
+//  Structural coding
+//=======================================================
+
+assign   reset_n = KEY[0];
+assign   set_n = KEY[1];
+
+always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
+	begin
+		if(!reset_n)
+			begin
+				counter_overflow <= counter_overflow+200;
+				counter <= 0;
+				LED[0] = 0;
+				LED[1] = ~0;
+				LED[2] = 0;
+				LED[3] = ~0;
+				LED[4] = 0;
+				LED[5] = ~0;
+				LED[6] = 0;
+				LED[7] = ~0;
+				
 			end
 		else if(!set_n)
 			begin
+				counter_overflow <= counter_overflow-200;
 				counter <= 0;
 				LED[0] = ~0;
 				LED[1] = ~0;
@@ -231,31 +242,12 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				LED[5] = ~0;
 				LED[6] = ~0;
 				LED[7] = ~0;
-				data[7:0] <= 8'h48; // H
-				data[15:8] <= 8'h61; // a
-				data[23:16] <= 8'h70; // p
-				data[31:24] <= 8'h70; // p
-				data[39:32] <= 8'h79; // y
-				data[47:40] <= 8'h20; // space
-				data[55:48] <= 8'h68; // h
-				data[63:56] <= 8'h6f; // o
-				data[71:64] <= 8'h6c; // l
-				data[79:72] <= 8'h69; // i
-				data[87:80] <= 8'h64; // d
-				data[95:88] <= 8'h61; // a
-				data[103:96] <= 8'h79; // y
-				data[111:104] <= 8'h73; // s
-				data[119:112] <= 8'h2e; // .
-				data[127:120] <= 8'h20; // space
-				data[135:128] <= 8'h3a; // :
-				data[143:136] <= 8'h5e; // ^
-				data[151:144] <= 8'h29; // )
-				data[159:152] <= 8'h0d; // CR	
-			end
+				end
 		else begin
 				counter   <= counter+1;
-				//if(counter[13]) // 6kHz baudrate
-				if(counter>5000) // trying to 5kHz //works like charm
+				//if(counter[13]) // ~6kHz baudrate
+				//if(counter>5000) // trying to 5kHz //works like charm
+				if (counter>counter_overflow) // dynamically changed overflow
 				begin
 					counter <= 0;
 					phase <= ~phase;
@@ -279,9 +271,9 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 						else LED[5] = 0;
 						if (data[6]) LED[6] <= ~0;
 						else LED[6] = 0;
-						if (data[7]) LED[7] <= ~0;
-						else LED[7] = 0;
-					end // data emit
+						// use LED[7] for 'clock signal' LED
+						LED[7] <= ~0;
+						end // data emit
 					else begin
 						LED[0] = 0;
 						LED[1] = 0;
