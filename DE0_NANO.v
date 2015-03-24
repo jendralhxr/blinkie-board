@@ -173,10 +173,9 @@ wire           				reset_n;
 wire 							set_n;
 
 reg [31:0] counter;
-reg [31:0] counter_overflow;
+reg [31:0] overflow;
 reg [7:0]  LED;
 reg [7:0] temp;
-reg [5:0] seq;
 reg [159:0] data; // 20 1-byte chars
 reg phase; // 0=off 1='emit' data
 
@@ -203,10 +202,8 @@ initial begin
 				data[151:144] = 8'h21; // !
 				data[159:152] = 8'h0d; // CR
 
-// init counter_overflow with 5000
-counter_overflow = 5000;
 end
-				
+						
 //=======================================================
 //  Structural coding
 //=======================================================
@@ -218,7 +215,17 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
-				counter_overflow <= counter_overflow+200;
+				//overflow <= 5000;
+				if (overflow==4000) overflow <= 4200;
+				else if (overflow==4200) overflow <= 4400;
+				else if (overflow==4400) overflow <= 4600;
+				else if (overflow==4600) overflow <= 4800;
+				else if (overflow==4800) overflow <= 5000;
+				else if (overflow==5000) overflow <= 5200;
+				else if (overflow==5200) overflow <= 5400;
+				else if (overflow==5400) overflow <= 5600;
+				else if (overflow==5600) overflow <= 5800;
+				else if (overflow==5800) overflow <= 6000;
 				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
@@ -232,7 +239,17 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 			end
 		else if(!set_n)
 			begin
-				counter_overflow <= counter_overflow-200;
+				//overflow <= 6000;
+				if (overflow==4200) overflow <= 4000;
+				else if (overflow==4400) overflow <= 4200;
+				else if (overflow==4600) overflow <= 4400;
+				else if (overflow==4800) overflow <= 4600;
+				else if (overflow==5000) overflow <= 4800;
+				else if (overflow==5200) overflow <= 5000;
+				else if (overflow==5400) overflow <= 5200;
+				else if (overflow==5600) overflow <= 5400;
+				else if (overflow==5800) overflow <= 5600;
+				else if (overflow==6000) overflow <= 5800;
 				counter <= 0;
 				LED[0] = ~0;
 				LED[1] = ~0;
@@ -246,8 +263,8 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 		else begin
 				counter   <= counter+1;
 				//if(counter[13]) // ~6kHz baudrate
-				//if(counter>5000) // trying to 5kHz //works like charm
-				if (counter>counter_overflow) // dynamically changed overflow
+				//if (counter>5000)
+				if (counter>overflow) 
 				begin
 					counter <= 0;
 					phase <= ~phase;
