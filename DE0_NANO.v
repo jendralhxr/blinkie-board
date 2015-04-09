@@ -215,18 +215,18 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
-				//overflow <= 5000;
-				if (overflow==4000) overflow <= 4200;
-				else if (overflow==4200) overflow <= 4400;
-				else if (overflow==4400) overflow <= 4600;
-				else if (overflow==4600) overflow <= 4800;
-				else if (overflow==4800) overflow <= 5000;
-				else if (overflow==5000) overflow <= 5200;
-				else if (overflow==5200) overflow <= 5400;
-				else if (overflow==5400) overflow <= 5600;
-				else if (overflow==5600) overflow <= 5800;
-				else if (overflow==5800) overflow <= 6000;
-				counter <= 0;
+				overflow <= 100000;
+				/*if (overflow==40000) overflow <= 42000;
+				else if (overflow==42000) overflow <= 44000;
+				else if (overflow==44000) overflow <= 46000;
+				else if (overflow==46000) overflow <= 48000;
+				else if (overflow==48000) overflow <= 50000;
+				else if (overflow==50000) overflow <= 52000;
+				else if (overflow==52000) overflow <= 54000;
+				else if (overflow==54000) overflow <= 56000;
+				else if (overflow==56000) overflow <= 58000;
+				else if (overflow==58000) overflow <= 60000;
+				*/counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
 				LED[2] = 0;
@@ -239,17 +239,18 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 			end
 		else if(!set_n)
 			begin
-				//overflow <= 6000;
-				if (overflow==4200) overflow <= 4000;
-				else if (overflow==4400) overflow <= 4200;
-				else if (overflow==4600) overflow <= 4400;
-				else if (overflow==4800) overflow <= 4600;
-				else if (overflow==5000) overflow <= 4800;
-				else if (overflow==5200) overflow <= 5000;
-				else if (overflow==5400) overflow <= 5200;
-				else if (overflow==5600) overflow <= 5400;
-				else if (overflow==5800) overflow <= 5600;
-				else if (overflow==6000) overflow <= 5800;
+				overflow <= 5000;
+				/*if (overflow==42000) overflow <= 40000;
+				else if (overflow==44000) overflow <= 42000;
+				else if (overflow==46000) overflow <= 44000;
+				else if (overflow==48000) overflow <= 46000;
+				else if (overflow==50000) overflow <= 48000;
+				else if (overflow==52000) overflow <= 50000;
+				else if (overflow==54000) overflow <= 52000;
+				else if (overflow==56000) overflow <= 54000;
+				else if (overflow==58000) overflow <= 56000;
+				else if (overflow==60000) overflow <= 58000;
+				*/
 				counter <= 0;
 				LED[0] = ~0;
 				LED[1] = ~0;
@@ -274,6 +275,15 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 						data[151:0] = data[159:8];
 						data[159:152] = temp[7:0];
 						counter <= 0;
+						LED[0] = ~0;
+						LED[1] = 0;
+						LED[2] = ~0;
+						LED[3] = 0;
+						LED[4] = ~0;
+						LED[5] = 0;
+						LED[6] = ~0;
+						LED[7] = 0;
+						/*
 						if (data[0]) LED[0] = ~0;
 						else LED[0] = 0;
 						if (data[1]) LED[1] <= ~0;
@@ -290,16 +300,17 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 						else LED[6] = 0;
 						// use LED[7] for 'clock signal' LED
 						LED[7] <= ~0;
+						*/
 						end // data emit
 					else begin
 						LED[0] = 0;
-						LED[1] = 0;
+						LED[1] = ~0;
 						LED[2] = 0;
-						LED[3] = 0;
+						LED[3] = ~0;
 						LED[4] = 0;
-						LED[5] = 0;
+						LED[5] = ~0;
 						LED[6] = 0;
-						LED[7] = 0;
+						LED[7] = ~0;
 					end // dark
 				end // counter overflow
 			end // counter add
