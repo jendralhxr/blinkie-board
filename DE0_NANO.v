@@ -201,7 +201,7 @@ initial begin
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h21; // !
 				data[159:152] = 8'h0d; // CR
-
+				overflow <= 5200;
 end
 						
 //=======================================================
@@ -215,17 +215,17 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
-				overflow <= 100000;
+				overflow <= 5200;
 				/*if (overflow==40000) overflow <= 42000;
 				else if (overflow==42000) overflow <= 44000;
-				else if (overflow==44000) overflow <= 46000;
-				else if (overflow==46000) overflow <= 48000;
-				else if (overflow==48000) overflow <= 50000;
-				else if (overflow==50000) overflow <= 52000;
-				else if (overflow==52000) overflow <= 54000;
-				else if (overflow==54000) overflow <= 56000;
-				else if (overflow==56000) overflow <= 58000;
-				else if (overflow==58000) overflow <= 60000;
+				else if (overflow==44000) overflow <= 45200;
+				else if (overflow==45200) overflow <= 48000;
+				else if (overflow==48000) overflow <= 52000;
+				else if (overflow==52000) overflow <= 52000;
+				else if (overflow==52000) overflow <= 52000;
+				else if (overflow==52000) overflow <= 55200;
+				else if (overflow==55200) overflow <= 52000;
+				else if (overflow==52000) overflow <= 52000;
 				*/counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
@@ -238,18 +238,18 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				
 			end
 		else if(!set_n)
-			begin
-				overflow <= 5000;
+			begin	
+				overflow <= 5200;
 				/*if (overflow==42000) overflow <= 40000;
 				else if (overflow==44000) overflow <= 42000;
-				else if (overflow==46000) overflow <= 44000;
-				else if (overflow==48000) overflow <= 46000;
-				else if (overflow==50000) overflow <= 48000;
-				else if (overflow==52000) overflow <= 50000;
-				else if (overflow==54000) overflow <= 52000;
-				else if (overflow==56000) overflow <= 54000;
-				else if (overflow==58000) overflow <= 56000;
-				else if (overflow==60000) overflow <= 58000;
+				else if (overflow==45200) overflow <= 44000;
+				else if (overflow==48000) overflow <= 45200;
+				else if (overflow==52000) overflow <= 48000;
+				else if (overflow==52000) overflow <= 52000;
+				else if (overflow==52000) overflow <= 52000;
+				else if (overflow==55200) overflow <= 52000;
+				else if (overflow==52000) overflow <= 55200;
+				else if (overflow==52000) overflow <= 52000;
 				*/
 				counter <= 0;
 				LED[0] = ~0;
@@ -264,26 +264,14 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 		else begin
 				counter   <= counter+1;
 				//if(counter[13]) // ~6kHz baudrate
-				//if (counter>5000)
+				//if (counter>5200)
 				if (counter>overflow) 
 				begin
 					counter <= 0;
-					phase <= ~phase;
-					if (phase)
-					begin
 						temp = data[7:0];
 						data[151:0] = data[159:8];
 						data[159:152] = temp[7:0];
-						counter <= 0;
-						LED[0] = ~0;
-						LED[1] = 0;
-						LED[2] = ~0;
-						LED[3] = 0;
-						LED[4] = ~0;
-						LED[5] = 0;
-						LED[6] = ~0;
-						LED[7] = 0;
-						/*
+						counter <= 0;						
 						if (data[0]) LED[0] = ~0;
 						else LED[0] = 0;
 						if (data[1]) LED[1] <= ~0;
@@ -300,18 +288,6 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 						else LED[6] = 0;
 						// use LED[7] for 'clock signal' LED
 						LED[7] <= ~0;
-						*/
-						end // data emit
-					else begin
-						LED[0] = 0;
-						LED[1] = ~0;
-						LED[2] = 0;
-						LED[3] = ~0;
-						LED[4] = 0;
-						LED[5] = ~0;
-						LED[6] = 0;
-						LED[7] = ~0;
-					end // dark
 				end // counter overflow
 			end // counter add
 		end // always
