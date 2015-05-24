@@ -226,7 +226,8 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				else if (overflow==52000) overflow <= 55200;
 				else if (overflow==55200) overflow <= 52000;
 				else if (overflow==52000) overflow <= 52000;
-				*/counter <= 0;
+				*/
+				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
 				LED[2] = 0;
@@ -287,7 +288,15 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 						if (data[6]) LED[6] <= ~0;
 						else LED[6] = 0;
 						// use LED[7] for 'clock signal' LED
-						LED[7] <= ~0;
+						if (phase>0)
+							begin
+							LED[7] <= ~0;
+							phase <= 0;
+							end
+						else begin
+							LED[7] <= 0;
+							phase <= phase+1;
+							end
 				end // counter overflow
 			end // counter add
 		end // always
