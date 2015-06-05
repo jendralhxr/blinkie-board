@@ -287,16 +287,11 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 						else LED[5] = 0;
 						if (data[6]) LED[6] <= ~0;
 						else LED[6] = 0;
-						// use LED[7] for 'clock signal' LED
-						if (phase>0)
-							begin
-							LED[7] <= ~0;
-							phase <= 0;
-							end
-						else begin
-							LED[7] <= 0;
-							phase <= phase+1;
-							end
+						// LED[7] keeps on 
+						// LED[7] <= ~0;
+						if (data[0]^data[1]^data[2]^data[3]^data[4]^data[5]^data[6]) LED[7]<=~0;
+						else LED[7]=0;
+						
 				end // counter overflow
 			end // counter add
 		end // always
