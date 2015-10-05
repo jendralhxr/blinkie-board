@@ -201,7 +201,7 @@ initial begin
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h21; // !
 				data[159:152] = 8'h0d; // CR
-				overflow <= 5050;
+				overflow <= 5200;
 end
 						
 //=======================================================
@@ -215,7 +215,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
-				overflow <= 5050;
+				overflow <= 5200;
 				/*if (overflow==40000) overflow <= 42000;
 				else if (overflow==42000) overflow <= 44000;
 				else if (overflow==44000) overflow <= 45200;
@@ -240,7 +240,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 			end
 		else if(!set_n)
 			begin	
-				overflow <= 5050;
+				overflow <= 5200;
 				/*if (overflow==42000) overflow <= 40000;
 				else if (overflow==44000) overflow <= 42000;
 				else if (overflow==45200) overflow <= 44000;
