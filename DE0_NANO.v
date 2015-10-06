@@ -215,18 +215,27 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
+				data[7:0] = 8'h52; // R
+				data[15:8] = 8'h6f; // o
+				data[23:16] = 8'h62; // b
+				data[31:24] = 8'h6f; // o
+				data[39:32] = 8'h74; // t
+				data[47:40] = 8'h69; // i
+				data[55:48] = 8'h63; // c
+				data[63:56] = 8'h73; // s
+				data[71:64] = 8'h20; // space
+				data[79:72] = 8'h4c; // L
+				data[87:80] = 8'h61; // a
+				data[95:88] = 8'h62; // b
+				data[103:96]= 8'h20; // space
+				data[111:104] = 8'h72; // r
+				data[119:112] = 8'h6f; // o
+				data[127:120] = 8'h63; // c
+				data[135:128] = 8'h6b; // k
+				data[143:136] = 8'h73; // s
+				data[151:144] = 8'h21; // !
+				data[159:152] = 8'h0d; // CR
 				overflow <= 5200;
-				/*if (overflow==40000) overflow <= 42000;
-				else if (overflow==42000) overflow <= 44000;
-				else if (overflow==44000) overflow <= 45200;
-				else if (overflow==45200) overflow <= 48000;
-				else if (overflow==48000) overflow <= 52000;
-				else if (overflow==52000) overflow <= 52000;
-				else if (overflow==52000) overflow <= 52000;
-				else if (overflow==52000) overflow <= 55200;
-				else if (overflow==55200) overflow <= 52000;
-				else if (overflow==52000) overflow <= 52000;
-				*/
 				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
@@ -240,18 +249,27 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 			end
 		else if(!set_n)
 			begin	
-				overflow <= 5200;
-				/*if (overflow==42000) overflow <= 40000;
-				else if (overflow==44000) overflow <= 42000;
-				else if (overflow==45200) overflow <= 44000;
-				else if (overflow==48000) overflow <= 45200;
-				else if (overflow==52000) overflow <= 48000;
-				else if (overflow==52000) overflow <= 52000;
-				else if (overflow==52000) overflow <= 52000;
-				else if (overflow==55200) overflow <= 52000;
-				else if (overflow==52000) overflow <= 55200;
-				else if (overflow==52000) overflow <= 52000;
-				*/
+				data[7:0] = 8'h41; // A
+				data[15:8] = 8'h70; // p
+				data[23:16] = 8'h70; // p
+				data[31:24] = 8'h6c; // l
+				data[39:32] = 8'h65; // e
+				data[47:40] = 8'h20; // space
+				data[55:48] = 8'h69; // i
+				data[63:56] = 8'h73; // s
+				data[71:64] = 8'h20; // space
+				data[79:72] = 8'h64; // d
+				data[87:80] = 8'h65; // e
+				data[95:88] = 8'h6c; // l
+				data[103:96]= 8'h69; // i
+				data[111:104] = 8'h63; // c
+				data[119:112] = 8'h69; // i
+				data[127:120] = 8'h6f; // o
+				data[135:128] = 8'h75; // u
+				data[143:136] = 8'h73; // s
+				data[151:144] = 8'h2e; // .
+				data[159:152] = 8'h0d; // CR
+				overflow <= 5400;
 				counter <= 0;
 				LED[0] = ~0;
 				LED[1] = ~0;
@@ -269,6 +287,9 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				if (counter>overflow) 
 				begin
 					counter <= 0;
+					if (phase==1) 
+						begin
+						phase <= 0;
 						temp = data[7:0];
 						data[151:0] = data[159:8];
 						data[159:152] = temp[7:0];
@@ -291,7 +312,19 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 						// LED[7] <= ~0;
 						if (data[0]^data[1]^data[2]^data[3]^data[4]^data[5]^data[6]) LED[7]<=~0;
 						else LED[7]=0;
-						
+						end // light
+					else
+						begin
+						phase <= 1;
+						LED[0] = 0;
+						LED[1] = 0;
+						LED[2] = 0;
+						LED[3] = 0;
+						LED[4] = 0;
+						LED[5] = 0;
+						LED[6] = 0;
+						LED[7] = 0;
+						end //dark
 				end // counter overflow
 			end // counter add
 		end // always
