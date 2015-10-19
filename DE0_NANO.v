@@ -201,7 +201,7 @@ initial begin
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h21; // !
 				data[159:152] = 8'h0d; // CR
-				overflow <= 5200;
+				overflow <= 26000;
 end
 						
 //=======================================================
@@ -235,7 +235,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h21; // !
 				data[159:152] = 8'h0d; // CR
-				overflow <= 5200;
+				overflow <= 26000;
 				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
@@ -249,10 +249,10 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 			end
 		else if(!set_n)
 			begin	
-				data[7:0] = 8'h41; // A
-				data[15:8] = 8'h70; // p
-				data[23:16] = 8'h70; // p
-				data[31:24] = 8'h6c; // l
+				data[7:0] = 8'h47; // G
+				data[15:8] = 8'h72; // r
+				data[23:16] = 8'h61; // a
+				data[31:24] = 8'h70; // p
 				data[39:32] = 8'h65; // e
 				data[47:40] = 8'h20; // space
 				data[55:48] = 8'h69; // i
@@ -269,7 +269,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h2e; // .
 				data[159:152] = 8'h0d; // CR
-				overflow <= 5400;
+				overflow <= 26800;
 				counter <= 0;
 				LED[0] = ~0;
 				LED[1] = ~0;
@@ -287,7 +287,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				if (counter>overflow) 
 				begin
 					counter <= 0;
-					if (phase==1) 
+					//if (phase==1) 
 						begin
 						phase <= 0;
 						temp = data[7:0];
@@ -313,8 +313,8 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 						if (data[0]^data[1]^data[2]^data[3]^data[4]^data[5]^data[6]) LED[7]<=~0;
 						else LED[7]=0;
 						end // light
-					else
-						begin
+					//else
+					/*	begin
 						phase <= 1;
 						LED[0] = 0;
 						LED[1] = 0;
@@ -324,7 +324,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 						LED[5] = 0;
 						LED[6] = 0;
 						LED[7] = 0;
-						end //dark
+						end //dark*/
 				end // counter overflow
 			end // counter add
 		end // always
