@@ -201,7 +201,7 @@ initial begin
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h21; // !
 				data[159:152] = 8'h0d; // CR
-				overflow <= 26000;
+				overflow <= 27000;
 end
 						
 //=======================================================
@@ -235,7 +235,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h21; // !
 				data[159:152] = 8'h0d; // CR
-				overflow <= 26000;
+				overflow <= 27000;
 				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
@@ -269,7 +269,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h2e; // .
 				data[159:152] = 8'h0d; // CR
-				overflow <= 26800;
+				overflow <= 27000;
 				counter <= 0;
 				LED[0] = ~0;
 				LED[1] = ~0;
