@@ -201,7 +201,7 @@ initial begin
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h21; // !
 				data[159:152] = 8'h0d; // CR
-				overflow <= 27000;
+				overflow <= 25000;
 end
 						
 //=======================================================
@@ -235,13 +235,13 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h21; // !
 				data[159:152] = 8'h0d; // CR
-				overflow <= 27000;
+				overflow <= 25000;
 				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
 				LED[2] = 0;
 				LED[3] = ~0;
-				LED[4] = 0;
+				LED[4] = 0; 
 				LED[5] = ~0;
 				LED[6] = 0;
 				LED[7] = ~0;
@@ -269,7 +269,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				data[143:136] = 8'h73; // s
 				data[151:144] = 8'h2e; // .
 				data[159:152] = 8'h0d; // CR
-				overflow <= 27000;
+				overflow <= 25000;
 				counter <= 0;
 				LED[0] = ~0;
 				LED[1] = ~0;
@@ -287,34 +287,24 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				if (counter>overflow) 
 				begin
 					counter <= 0;
-					//if (phase==1) 
+					phase <= 0;
+					temp = data[7:0];
+					data[151:0] = data[159:8];
+					data[159:152] = temp[7:0];
+					if (phase==1) 
 						begin
+						LED[0] = ~0;
+						LED[1] = ~0;
+						LED[2] = ~0;
+						LED[3] = ~0;
+						LED[4] = ~0;
+						LED[5] = ~0;
+						LED[6] = ~0;
+						LED[7] = ~0;
 						phase <= 0;
-						temp = data[7:0];
-						data[151:0] = data[159:8];
-						data[159:152] = temp[7:0];
-						counter <= 0;						
-						if (data[0]) LED[0] = ~0;
-						else LED[0] = 0;
-						if (data[1]) LED[1] <= ~0;
-						else LED[1] = 0;
-						if (data[2]) LED[2] <= ~0;
-						else LED[2] = 0;
-						if (data[3]) LED[3] <= ~0;
-						else LED[3] = 0;
-						if (data[4]) LED[4] <= ~0;
-						else LED[4] = 0;
-						if (data[5]) LED[5] <= ~0;
-						else LED[5] = 0;
-						if (data[6]) LED[6] <= ~0;
-						else LED[6] = 0;
-						// LED[7] keeps on 
-						// LED[7] <= ~0;
-						if (data[0]^data[1]^data[2]^data[3]^data[4]^data[5]^data[6]) LED[7]<=~0;
-						else LED[7]=0;
-						end // light
-					//else
-					/*	begin
+						end
+					else
+						begin
 						phase <= 1;
 						LED[0] = 0;
 						LED[1] = 0;
