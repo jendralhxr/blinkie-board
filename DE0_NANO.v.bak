@@ -170,47 +170,99 @@ input 		     [1:0]		GPIO_1_IN;
 //  REG/WIRE declarations
 //=======================================================
 wire           				reset_n;
+wire 							set_n;
 
-reg 	[26:0] 	counter;
-reg 	[5:0]   PWM_adj;
-reg     [6:0]   PWM_width;
-reg     [7:0]   LED;
+reg [31:0] counter;
+reg [31:0] overflow;
+reg [7:0]  LED;
+reg [7:0] temp;
+reg [159:0] data; // 20 1-byte chars
+reg phase; // 0=off 1='emit' data
 
-
+initial begin
+// init data with 'Robotics Lab rocks!/r'
+				data[7:0] = 8'h52; // R
+				data[15:8] = 8'h6f; // o
+				data[23:16] = 8'h62; // b
+				data[31:24] = 8'h6f; // o
+				data[39:32] = 8'h74; // t
+				data[47:40] = 8'h69; // i
+				data[55:48] = 8'h63; // c
+				data[63:56] = 8'h73; // s
+				data[71:64] = 8'h20; // space
+				data[79:72] = 8'h4c; // L
+				data[87:80] = 8'h61; // a
+				data[95:88] = 8'h62; // b
+				data[103:96]= 8'h20; // space
+				data[111:104] = 8'h72; // r
+				data[119:112] = 8'h6f; // o
+				data[127:120] = 8'h63; // c
+				data[135:128] = 8'h6b; // k
+				data[143:136] = 8'h73; // s
+				data[151:144] = 8'h21; // !
+				data[159:152] = 8'h0d; // CR
+				overflow <= 25000;
+end
+						
 //=======================================================
 //  Structural coding
 //=======================================================
 
 assign   reset_n = KEY[0];
+assign   set_n = KEY[1];
 
-always @(posedge CLOCK_50 or negedge reset_n)
+always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
+				overflow <= 25000;
 				counter <= 0;
-				LED[0] <= 0;
+				LED[0] = 0;
+				LED[1] = ~0;
+				LED[2] = 0;
+				LED[3] = ~0;
+				LED[4] = 0; 
+				LED[5] = ~0;
+				LED[6] = 0;
+				LED[7] = ~0;
+				
 			end
+		else if(!set_n)
+			begin	
+				overflow <= overflow + 10;
+				counter <= 0;
+				LED[0] = ~0;
+				LED[1] = ~0;
+				LED[2] = ~0;
+				LED[3] = ~0;
+				LED[4] = ~0;
+				LED[5] = ~0;
+				LED[6] = ~0;
+				LED[7] = ~0;
+				end
 		else begin
 				counter   <= counter+1;
-				PWM_width <= PWM_width[5:0]+ PWM_adj;
-				if(counter[26])
-					begin
-						PWM_adj <= counter[25:20];
-					end
-				else begin
-						PWM_adj <= ~ counter[25:20];
-					 end
-				LED[0] <= ~PWM_width[6];
-				LED[1] <= ~PWM_width[6];
-				LED[2] <= ~PWM_width[6];
-				LED[3] <= ~PWM_width[6];
-				LED[4] <= PWM_width[6];
-				LED[5] <= PWM_width[6];
-				LED[6] <= PWM_width[6];
-				LED[7] <= PWM_width[6];
-			 end
-	end
-
-
-
+				//if(counter[13]) // ~6kHz baudrate
+				//if (counter>5200)
+				if (counter>overflow) 
+				begin
+					counter <= 0;
+					phase <= 0;
+					temp = data[7:0];
+					data[151:0] = data[159:8];
+					data[159:152] = temp[7:0];
+				
+				if (phase==1) 
+						begin
+						LED[7] = ~0;
+						phase <= 0;
+						end
+					else
+						begin
+						phase <= 1;
+						LED[7] = 0;
+						end //dark*/
+				end // counter overflow
+			end // counter add
+		end // always
 endmodule
