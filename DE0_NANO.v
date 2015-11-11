@@ -176,32 +176,112 @@ reg [31:0] counter;
 reg [31:0] overflow;
 reg [7:0]  LED;
 reg [7:0] temp;
-reg [159:0] data; // 20 1-byte chars
+reg [799:0] data; // 20 1-byte chars
 reg phase; // 0=off 1='emit' data
 
 initial begin
-// init data with 'Robotics Lab rocks!/r'
-				data[7:0] = 8'h52; // R
-				data[15:8] = 8'h6f; // o
-				data[23:16] = 8'h62; // b
-				data[31:24] = 8'h6f; // o
-				data[39:32] = 8'h74; // t
-				data[47:40] = 8'h69; // i
-				data[55:48] = 8'h63; // c
-				data[63:56] = 8'h73; // s
-				data[71:64] = 8'h20; // space
-				data[79:72] = 8'h4c; // L
-				data[87:80] = 8'h61; // a
-				data[95:88] = 8'h62; // b
-				data[103:96]= 8'h20; // space
-				data[111:104] = 8'h72; // r
-				data[119:112] = 8'h6f; // o
-				data[127:120] = 8'h63; // c
-				data[135:128] = 8'h6b; // k
-				data[143:136] = 8'h73; // s
-				data[151:144] = 8'h21; // !
-				data[159:152] = 8'h0d; // CR
-				overflow <= 25000;
+// init data with Lorem ipsum (99 chars+CR)
+	data[7:0] = 8'h4c;
+	data[15:8] = 8'h6f;
+	data[23:16] = 8'h72;
+	data[31:24] = 8'h65;
+	data[39:32] = 8'h6d;
+	data[47:40] = 8'h20;
+	data[55:48] = 8'h69;
+	data[63:56] = 8'h70;
+	data[71:64] = 8'h73;
+	data[79:72] = 8'h75;
+	data[87:80] = 8'h6d;
+	data[95:88] = 8'h20;
+	data[103:96] = 8'h64;
+	data[111:104] = 8'h6f;
+	data[119:112] = 8'h6c;
+	data[127:120] = 8'h6f;
+	data[135:128] = 8'h72;
+	data[143:136] = 8'h20;
+	data[151:144] = 8'h73;
+	data[159:152] = 8'h69;
+	data[167:160] = 8'h74;
+	data[175:168] = 8'h20;
+	data[183:176] = 8'h61;
+	data[191:184] = 8'h6d;
+	data[199:192] = 8'h65;
+	data[207:200] = 8'h74;
+	data[215:208] = 8'h2c;
+	data[223:216] = 8'h20;
+	data[231:224] = 8'h63;
+	data[239:232] = 8'h6f;
+	data[247:240] = 8'h6e;
+	data[255:248] = 8'h73;
+	data[263:256] = 8'h65;
+	data[271:264] = 8'h63;
+	data[279:272] = 8'h74;
+	data[287:280] = 8'h65;
+	data[295:288] = 8'h74;
+	data[303:296] = 8'h75;
+	data[311:304] = 8'h72;
+	data[319:312] = 8'h20;
+	data[327:320] = 8'h61;
+	data[335:328] = 8'h64;
+	data[343:336] = 8'h69;
+	data[351:344] = 8'h70;
+	data[359:352] = 8'h69;
+	data[367:360] = 8'h73;
+	data[375:368] = 8'h63;
+	data[383:376] = 8'h69;
+	data[391:384] = 8'h6e;
+	data[399:392] = 8'h67;
+	data[407:400] = 8'h20;
+	data[415:408] = 8'h65;
+	data[423:416] = 8'h6c;
+	data[431:424] = 8'h69;
+	data[439:432] = 8'h74;
+	data[447:440] = 8'h2e;
+	data[455:448] = 8'h20;
+	data[463:456] = 8'h43;
+	data[471:464] = 8'h72;
+	data[479:472] = 8'h61;
+	data[487:480] = 8'h73;
+	data[495:488] = 8'h20;
+	data[503:496] = 8'h61;
+	data[511:504] = 8'h20;
+	data[519:512] = 8'h69;
+	data[527:520] = 8'h61;
+	data[535:528] = 8'h63;
+	data[543:536] = 8'h75;
+	data[551:544] = 8'h6c;
+	data[559:552] = 8'h69;
+	data[567:560] = 8'h73;
+	data[575:568] = 8'h20;
+	data[583:576] = 8'h76;
+	data[591:584] = 8'h65;
+	data[599:592] = 8'h6c;
+	data[607:600] = 8'h69;
+	data[615:608] = 8'h74;
+	data[623:616] = 8'h2c;
+	data[631:624] = 8'h20;
+	data[639:632] = 8'h65;
+	data[647:640] = 8'h67;
+	data[655:648] = 8'h65;
+	data[663:656] = 8'h74;
+	data[671:664] = 8'h20;
+	data[679:672] = 8'h64;
+	data[687:680] = 8'h61;
+	data[695:688] = 8'h70;
+	data[703:696] = 8'h69;
+	data[711:704] = 8'h62;
+	data[719:712] = 8'h75;
+	data[727:720] = 8'h73;
+	data[735:728] = 8'h20;
+	data[743:736] = 8'h6e;
+	data[751:744] = 8'h75;
+	data[759:752] = 8'h6c;
+	data[767:760] = 8'h6c;
+	data[775:768] = 8'h61;
+	data[783:776] = 8'h6d;
+	data[791:784] = 8'h2e;
+	data[799:792] = 8'h0d;
+	overflow <= 25000;
 end
 						
 //=======================================================
@@ -247,8 +327,8 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 					counter <= 0;
 					phase <= 0;
 					temp = data[7:0];
-					data[151:0] = data[159:8];
-					data[159:152] = temp[7:0];
+					data[791:0]= data[799:8];
+					data[799:792]= temp[7:0];
 					// lit the LEDs
 					if (data[0]) LED[0] <= ~0;
 					else LED[0] <= 0;
