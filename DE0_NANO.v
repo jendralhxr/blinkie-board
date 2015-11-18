@@ -295,7 +295,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
-				overflow <= 25000;
+				overflow <= 24999;
 				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
@@ -309,7 +309,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 			end
 		else if(!set_n)
 			begin	
-				overflow <= overflow + 10;
+				overflow <= 25008;
 				counter <= 0;
 				LED[0] = ~0;
 				LED[1] = ~0;
