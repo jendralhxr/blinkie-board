@@ -163,6 +163,7 @@ input 		     [1:0]		GPIO_0_IN;
 
 //////////// GPIO_0, GPIO_1 connect to GPIO Default //////////
 inout 		    [33:0]		GPIO_1_D;
+//input 		    [33:0]		GPIO_1_D;
 input 		     [1:0]		GPIO_1_IN;
 
 
@@ -171,10 +172,11 @@ input 		     [1:0]		GPIO_1_IN;
 //=======================================================
 wire           				reset_n;
 wire 							set_n;
-
+reg [33:0] GPIO_1_D;
+reg iseng;
 reg [31:0] counter;
 reg [31:0] overflow;
-reg [7:0]  LED;
+reg [7:0] LED;
 reg [7:0] temp;
 reg [799:0] data; // 20 1-byte chars
 reg phase; // 0=off 1='emit' data
@@ -295,7 +297,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
-				overflow <= 24999;
+				overflow <= 25000;
 				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
@@ -321,7 +323,9 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				LED[7] = ~0;
 				end
 		else begin
-				counter   <= counter+1;
+			counter   <= counter+1;
+			GPIO_1_D[9]<= CLOCK_50;
+			GPIO_1_D[25] <= counter[0];
 				if (counter>overflow) 
 				begin
 					counter <= 0;
@@ -346,15 +350,17 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 					else LED[6] <= 0;
 					if (data[7]) LED[7] <= ~0;
 					else LED[7] <= 0;
-				if (phase==1) 
+				if (phase) 
 						begin
 						LED[7] = ~0;
+			//			GPIO_1_D[9]<= CLOCK_50;
 						phase <= 0;
 						end
 					else
 						begin
 						phase <= 1;
 						LED[7] = 0;
+				//		GPIO_1_D[9] <= 0;
 						end //dark*/
 				end // counter overflow
 			end // counter add
