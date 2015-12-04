@@ -297,7 +297,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
-				overflow <= 25000;
+				overflow <= 25002;
 				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
@@ -311,7 +311,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 			end
 		else if(!set_n)
 			begin	
-				overflow <= 25008;
+				overflow <= 25002;
 				counter <= 0;
 				LED[0] = ~0;
 				LED[1] = ~0;
@@ -348,20 +348,9 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 					else LED[5] <= 0;
 					if (data[6]) LED[6] <= ~0;
 					else LED[6] <= 0;
-					if (data[7]) LED[7] <= ~0;
-					else LED[7] <= 0;
-				if (phase) 
-						begin
-						LED[7] = ~0;
-			//			GPIO_1_D[9]<= CLOCK_50;
-						phase <= 0;
-						end
-					else
-						begin
-						phase <= 1;
-						LED[7] = 0;
-				//		GPIO_1_D[9] <= 0;
-						end //dark*/
+					if (data[0]^data[1]^data[2]^data[3]^data[4]^data[5]^data[6]) LED[7]<=~0;
+					else LED[7]=0;
+					
 				end // counter overflow
 			end // counter add
 		end // always
