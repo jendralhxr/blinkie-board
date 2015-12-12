@@ -324,8 +324,8 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 				end
 		else begin
 			counter   <= counter+1;
-			GPIO_1_D[9]<= CLOCK_50;
-			GPIO_1_D[25] <= counter[0];
+			//GPIO_1_D[9]<= CLOCK_50;
+			GPIO_1_D[25] <= counter[14];
 				if (counter>overflow) 
 				begin
 					counter <= 0;
