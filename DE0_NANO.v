@@ -283,7 +283,7 @@ initial begin
 	data[783:776] = 8'h6d;
 	data[791:784] = 8'h2e;
 	data[799:792] = 8'h0d;
-	overflow <= 25000;
+	overflow <= 25500;
 end
 						
 //=======================================================
@@ -297,7 +297,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
-				overflow <= 25002;
+				overflow <= 26000;
 				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
@@ -311,10 +311,10 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 			end
 		else if(!set_n)
 			begin	
-				overflow <= 25002;
+				overflow <= 27000;
 				counter <= 0;
 				LED[0] = ~0;
-				LED[1] = ~0;
+				LED[1] = ~0; 
 				LED[2] = ~0;
 				LED[3] = ~0;
 				LED[4] = ~0;
@@ -325,11 +325,13 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 		else begin
 			counter   <= counter+1;
 			//GPIO_1_D[9]<= CLOCK_50;
-			GPIO_1_D[25] <= counter[14];
+			if (counter>100) phase<= 0;
+			else phase <= 1;
+			GPIO_1_D[25] <= phase;
+			//GPIO_1_D[9] <= counter[14];
 				if (counter>overflow) 
 				begin
 					counter <= 0;
-					phase <= 0;
 					temp = data[7:0];
 					data[791:0]= data[799:8];
 					data[799:792]= temp[7:0];
