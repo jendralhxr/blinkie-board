@@ -225,7 +225,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 		else begin
 			counter   <= counter+1;
 			//GPIO_1_D[9]<= CLOCK_50;
-			if (counter>100) phase<= 0;
+			if (counter<12000) phase<= 0;
 			else phase <= 1;
 			GPIO_1_D[25] <= phase;
 			//GPIO0_1_D[9] <= counter[14];
@@ -250,8 +250,8 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 					else LED[5] <= 0;
 					if (data[6]) LED[6] <= ~0;
 					else LED[6] <= 0;
-					if (phase_led) LED[7]<=~0;
-					else LED[7]=0;
+					if (data[0]) LED[7]<=0;
+					else LED[7]=~0;
 					
 				end // counter overflow
 			end // counter add
