@@ -183,7 +183,7 @@ reg phase; // 0=off 1='emit' data
 reg phase_led;
 
 initial begin
-	overflow <= 25100;
+	overflow <= 25000;
 end
 						
 //=======================================================
@@ -197,7 +197,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 	begin
 		if(!reset_n)
 			begin
-				overflow <= 25150;
+				overflow <= 25000;
 				counter <= 0;
 				LED[0] = 0;
 				LED[1] = ~0;
@@ -211,7 +211,7 @@ always @(posedge CLOCK_50 or negedge reset_n or negedge set_n)
 			end
 		else if(!set_n)
 			begin	
-				overflow <= 25200;
+				overflow <= 25000;
 				counter <= 0;
 				LED[0] = ~0;
 				LED[1] = ~0; 

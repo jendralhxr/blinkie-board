@@ -8,7 +8,7 @@ char source[200];
 
 int fd;
 int main(){
-    fd = open("foo",O_WRONLY | O_CREAT, S_IRWXU);
+    fd = open("foostring",O_WRONLY | O_CREAT, S_IRWXU);
     strcpy(source,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a iaculis velit, eget dapibus nullam.\n");
     int i;
     for (i=0; i<strlen(source); i++){	
