@@ -32,7 +32,7 @@ int main(int argc, char **argv){
 			sprintf(string,"data[%d:%d] = 8'h0d;\n", k*8+7, k*8);
 			write(fd, string, strlen(string));
 			k++;
-			sprintf(string,"data[%d:%d] = 8'h0dh;\n", k*8+7, k*8);
+			sprintf(string,"data[%d:%d] = 8'h0d;\n", k*8+7, k*8);
 			write(fd, string, strlen(string));
 			k++;
 			}
