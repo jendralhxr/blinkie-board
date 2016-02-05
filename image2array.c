@@ -21,26 +21,43 @@ int main(int argc, char **argv){
 	int i, j, k=0;
     for (j=0; j<matA->rows; j++){
 		if ((j==0) & (i==0)){
-			sprintf(string,"data[%d:%d] = 8'h0c;\n", k*8+7, k*8);
+			sprintf(string,"dataH[%d:%d] = 4'h0;", k*4+3, k*4);
+			write(fd, string, strlen(string));
+			sprintf(string," dataL[%d:%d] = 4'hc;\n", k*4+3, k*4);
 			write(fd, string, strlen(string));
 			k++;
-			sprintf(string,"data[%d:%d] = 8'h0c;\n", k*8+7, k*8);
+			sprintf(string,"dataH[%d:%d] = 4'h0;", k*4+3, k*4);
+			write(fd, string, strlen(string));
+			sprintf(string," dataL[%d:%d] = 4'hc;\n", k*4+3, k*4);
 			write(fd, string, strlen(string));
 			k++;
 			}
 		else{
-			sprintf(string,"data[%d:%d] = 8'h0d;\n", k*8+7, k*8);
+			sprintf(string,"dataH[%d:%d] = 4'h0;", k*4+3, k*4);
+			write(fd, string, strlen(string));
+			sprintf(string," dataL[%d:%d] = 4'hd;\n", k*4+3, k*4);
 			write(fd, string, strlen(string));
 			k++;
-			sprintf(string,"data[%d:%d] = 8'h0d;\n", k*8+7, k*8);
+			sprintf(string,"dataH[%d:%d] = 4'h0;", k*4+3, k*4);
+			write(fd, string, strlen(string));
+			sprintf(string," dataL[%d:%d] = 4'hd;\n", k*4+3, k*4);
 			write(fd, string, strlen(string));
 			k++;
 			}
 		for (i=0; i<matA->cols; i++){	
 			temp= matA->data.ptr[j*matA->cols+i];
-			if ((temp!=0xc) && (temp!=0xd)) sprintf(string,"data[%d:%d] = 8'h%x;\n", k*8+7, k*8, temp);
-			else sprintf(string,"data[%d:%d] = 8'h0e;\n", k*8+7, k*8);
-			write(fd, string, strlen(string));
+			if ((temp!=0xc) && (temp!=0xd)){
+				sprintf(string,"dataH[%d:%d] = 4'h%x;", k*4+3, k*4, ((temp&0xf0)>>4));
+				write(fd, string, strlen(string));
+				sprintf(string," dataL[%d:%d] = 4'h%x;\n", k*4+3, k*4, temp&0x0f);
+				write(fd, string, strlen(string));
+				}
+			else{
+				sprintf(string,"dataH[%d:%d] = 4'h0;\n", k*4+3, k*4);
+				write(fd, string, strlen(string));
+				sprintf(string,"dataL[%d:%d] = 4'he;\n", k*4+3, k*4);
+				write(fd, string, strlen(string));
+				}
 			k++;
 			}	
 		}
